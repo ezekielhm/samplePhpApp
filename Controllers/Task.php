@@ -1,21 +1,18 @@
 <?php
 
 defined('SITE_NAME') OR exit('access denied');
+require_once('dbCredentials.php');
 
 class Task extends Controller
 {
 	public function index()
 	{	
 
+
 		$responseArr = [];
 
-		$servername = "localhost";
-		$username = "root";
-		$password = "";
-		$dbname = "tasks";
-
 		try {
-			$conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+			$conn = $this->connectDB();
 			  // set the PDO error mode to exception
 			$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			$stmt  = $conn->prepare("SELECT `task`,`id` FROM `tasks_table`");
@@ -52,13 +49,8 @@ class Task extends Controller
 		$jsonDecode = json_decode($requestBody, true);
 
 
-		$servername = "localhost";
-		$username = "root";
-		$password = "";
-		$dbname = "tasks";
-
 		try {
-			  $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+			  $conn = $this->connectDB();
 			  // set the PDO error mode to exception
 			  $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
@@ -103,13 +95,8 @@ class Task extends Controller
 
 		$jsonDecode = json_decode($requestBody, true);
 
-		$servername = "localhost";
-		$username = "root";
-		$password = "";
-		$dbname = "tasks";
-
 		try {
-			  $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+			  $conn = $this->connectDB();
 			  // set the PDO error mode to exception
 			  $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
@@ -135,5 +122,18 @@ class Task extends Controller
 		 	echo "Error: " . $e->getMessage();
 		}
 		$conn = null;
+	}
+
+	private function connectDB(){
+		$UserConstans = get_defined_constants(true)['user'];
+
+		$servername = $UserConstans['servername'];
+		$username = $UserConstans['username'];
+		$password = $UserConstans['password'];
+		$dbname = $UserConstans['dbname'];
+
+		$conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+
+		return $conn;
 	}
 }
